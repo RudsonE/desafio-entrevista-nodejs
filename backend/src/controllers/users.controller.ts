@@ -4,6 +4,7 @@ import {
   Post,
   Body,
   Res,
+  Req,
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiParam, ApiBody } from '@nestjs/swagger';
@@ -38,7 +39,10 @@ export class UserController {
   }
 
   @Post('/login')
-  async loginUser(@Body() data, @Res() res) {
+  async loginUser(@Body() data, @Res() res, @Req() req) {
+    if(!req.body || Object.keys(req.body).length === 0){
+      res.status(401).json({ message: "Send your credentials."});
+    }
     try {
       const login = await this.userService.loginUser(data);
       if (login.token) {
@@ -50,7 +54,7 @@ export class UserController {
     }
   }
 
-  @Post('/logout')
+  @Get('/logout')
   async logoutUser(@Body() data, @Res() res){
     res.cookie('nnjwt', '', {expires: new Date(0)})
     res.status(200).json({ message: 'Logged out.' });
