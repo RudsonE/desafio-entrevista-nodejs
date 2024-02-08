@@ -35,12 +35,12 @@ export class CarService {
     }
   }
 
-  async makeBid(data){
+  async makeBid(data, userId){
 
     try {
       //const auction = await this.prisma.bid.findUnique({where: data.auctionId})
 
-        await this.prisma.bid.create({data: {...data}})
+        await this.prisma.bid.create({data: {...data, userId}})
         return {
           message: `Bid added at ${data.auctionId}` ,
           code: HttpStatus.CREATED,

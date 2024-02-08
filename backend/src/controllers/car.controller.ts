@@ -43,8 +43,9 @@ export class CarController{
     }
 
     @Post("/bid")
-    async makeBid(@Body() data, @Res() res){
-      const bid = await this.carService.makeBid(data)
+    async makeBid(@Body() data,@Req() request, @Res() res){
+      const userId = request.user.sub;
+      const bid = await this.carService.makeBid(data, userId)
       res.status(200).json(bid)
     }
 
