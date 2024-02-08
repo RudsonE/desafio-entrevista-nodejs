@@ -45,6 +45,7 @@ export class UserService {
       return {
         success: false,
         message: 'Failed to create new user',
+        error: error,
         code: HttpStatus.INTERNAL_SERVER_ERROR,
       };
     }

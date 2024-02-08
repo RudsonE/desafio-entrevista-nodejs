@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { CreateUserDto, LoginUserDto } from 'src/dto/create-user.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import { access } from 'fs';
 
 @Injectable()
 export class CarService {
@@ -21,4 +22,51 @@ export class CarService {
       );
     }
   }
+
+  async getCars(){
+    try {
+      return await this.prisma.auction.findMany()
+
+    } catch (error) {
+      return {
+        message: 'Fail to get all Auctions',
+        code: HttpStatus.BAD_REQUEST,
+      };
+    }
+  }
+
+  async makeBid(data){
+
+    try {
+      //const auction = await this.prisma.bid.findUnique({where: data.auctionId})
+
+        await this.prisma.bid.create({data: {...data}})
+        return {
+          message: `Bid added at ${data.auctionId}` ,
+          code: HttpStatus.CREATED,
+        };
+      
+      } catch(e){
+        return {
+          message: `Error: ${e}` ,
+          code: HttpStatus.INTERNAL_SERVER_ERROR,
+        };
+      }
+  }
+
+  async getAllBids(data){
+      try {
+        const bids = await this.prisma.bid.findMany({where:{auctionId: {equals: data.auctionId}}})
+        return {
+          bids,
+          code: HttpStatus.CREATED,
+        };
+      } catch (error) {
+        return {
+          message: "Internal Error",
+          code: HttpStatus.INTERNAL_SERVER_ERROR,
+        };
+      }
+  }
+  
 }

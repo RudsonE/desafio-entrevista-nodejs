@@ -35,4 +35,22 @@ export class CarController{
         const car = await this.carService.setCar(creatorId, data)
         res.status(200).json({car})
     }
+
+    @Get("/getAll")
+    async getAuctions(@Res() res){
+      const auctions = await this.carService.getCars()
+      res.status(200).json(auctions)
+    }
+
+    @Post("/bid")
+    async makeBid(@Body() data, @Res() res){
+      const bid = await this.carService.makeBid(data)
+      res.status(200).json(bid)
+    }
+
+    @Post("/bid/getAll")
+    async getBids(@Body() data, @Res() res){
+      const bids = await this.carService.getAllBids(data)
+      res.status(200).json(bids)
+    }
 }
